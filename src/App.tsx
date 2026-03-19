@@ -4,6 +4,7 @@ import IndexPage from "@/pages/index-page";
 import SignInPage from "./pages/sign-in-page";
 import SignUpPage from "./pages/sign-up-page";
 import CounterPage from "./pages/counter-page";
+import TodoListPage from "./pages/todo-list-page";
 
 function AutoLayout() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
       </Route>
+      <Route path="/todolist" element={<TodoListPage />} />
     </Routes>
   );
 }
