@@ -1,24 +1,36 @@
 import { create } from "zustand"; // create = store(zustand에서 state 와 action 함수가 포함된 객체) 생성
-import { combine } from "zustand/middleware";
+import { combine, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 export const useCountStore = create(
-  immer(
-    combine({ count: 0 }, (set, get) => ({
-      actions: {
-        increase: () => {
-          set((state) => {
-            state.count += 1;
-          });
+  subscribeWithSelector(
+    immer(
+      combine({ count: 0 }, (set, get) => ({
+        actions: {
+          increase: () => {
+            set((state) => {
+              state.count += 1;
+            });
+          },
+          decrease: () => {
+            set((state) => {
+              state.count -= 1;
+            });
+          },
         },
-        decrease: () => {
-          set((state) => {
-            state.count -= 1;
-          });
-        },
-      },
-    })),
+      })),
+    ),
   ),
+);
+
+useCountStore.subscribe(
+  (store) => store.count,
+  (count, prevCount) => {
+    // Listener
+    console.log(count, prevCount);
+
+    // const store = useCountStore.getState();
+  },
 );
 
 // export const useCountStore = create<Store>((set, get) => ({
