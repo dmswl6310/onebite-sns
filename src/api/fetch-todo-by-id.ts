@@ -1,7 +1,7 @@
 import { API_URL } from "@/lib/constant";
 import type { Todo } from "@/type";
 
-export async function fetchTodoById(id: number) {
+export async function fetchTodoById(id: string) {
   const response = await fetch(`${API_URL}/todos/${id}`);
   if (!response.ok) throw new Error("Fetch Failed");
 
