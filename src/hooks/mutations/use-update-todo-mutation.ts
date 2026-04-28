@@ -9,39 +9,38 @@ export function useUpdateTodoMutation() {
   return useMutation({
     mutationFn: updateTodo,
     onMutate: async (updatedTodo) => {
-      // 예외2
       await queryClient.cancelQueries({
-        queryKey: QUERY_KEYS.todo.list, // 해당 키에 대한 조회요청을 모두 취소시킴
+        queryKey: QUERY_KEYS.todo.detail(updatedTodo.id),
       });
 
-      const prevTodos = queryClient.getQueryData<Todo[]>(QUERY_KEYS.todo.list);
-      queryClient.setQueryData<Todo[]>(QUERY_KEYS.todo.list, (prevTodos) => {
-        if (!prevTodos) return [];
-        return prevTodos.map((prevTodo) =>
-          prevTodo.id == updatedTodo.id
-            ? { ...prevTodo, ...updatedTodo }
-            : prevTodo,
-        );
-      });
+      const prevTodo = queryClient.getQueryData<Todo>(
+        QUERY_KEYS.todo.detail(updatedTodo.id),
+      );
+
+      queryClient.setQueryData<Todo>(
+        QUERY_KEYS.todo.detail(updatedTodo.id),
+        (prevTodo) => {
+          if (!prevTodo) return;
+          return {
+            ...prevTodo,
+            updatedTodo,
+          };
+        },
+      );
+
       return {
-        prevTodos,
+        prevTodo,
       };
     },
 
     // 예외1
     onError: (error, variable, context) => {
-      if (context && context.prevTodos) {
-        queryClient.setQueryData<Todo[]>(
-          QUERY_KEYS.todo.list,
-          context.prevTodos,
+      if (context && context.prevTodo) {
+        queryClient.setQueryData<Todo>(
+          QUERY_KEYS.todo.detail(context.prevTodo.id),
+          context.prevTodo,
         );
       }
-    },
-    // 예외3
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.todo.list,
-      });
     },
   });
 }
