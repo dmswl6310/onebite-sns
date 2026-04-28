@@ -11,10 +11,17 @@ export function useCreateTodoMutation() {
     onMutate: () => {}, // 요청이 시작되었을때
     onSettled: () => {}, // 요청이 종료되었을때
     onSuccess: (newTodo) => {
-      queryClient.setQueryData<Todo[]>(QUERY_KEYS.todo.list, (prevTodos) => {
-        if (!prevTodos) return [newTodo];
-        return [...prevTodos, newTodo];
-      });
+      queryClient.setQueryData<Todo>(
+        QUERY_KEYS.todo.detail(newTodo.id),
+        newTodo,
+      );
+      queryClient.setQueryData<string[]>(
+        QUERY_KEYS.todo.list,
+        (prevTodoIds) => {
+          if (!prevTodoIds) return [newTodo.id];
+          return [...prevTodoIds, newTodo.id];
+        },
+      );
     },
     onError: (error) => {
       window.alert(error.message);
