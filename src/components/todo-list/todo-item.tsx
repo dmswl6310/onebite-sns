@@ -5,7 +5,7 @@ import { useDeleteTodoMutation } from "@/hooks/mutations/use-delete-todo-mutatio
 import { useTodoDataById } from "@/hooks/queries/use-todo-data-by-id";
 
 export default function TodoItem({ id }: { id: string }) {
-  const { data: todo } = useTodoDataById(id); // 캐시된 데이터를 사용하므로 다시 요청X
+  const { data: todo } = useTodoDataById(id, "LIST"); // 캐시된 데이터를 사용하므로 다시 요청X
   if (!todo) throw new Error("Todo Data Undefined");
   const { content, isDone } = todo;
 
