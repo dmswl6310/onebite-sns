@@ -2,12 +2,17 @@ import { Button } from "../ui/button";
 import { Link } from "react-router";
 import type { Todo } from "@/type";
 import { useUpdateTodoMutation } from "@/hooks/mutations/use-update-todo-mutation";
+import { useDeleteTodoMutation } from "@/hooks/mutations/use-delete-todo-mutation";
 
 export default function TodoItem({ id, content, isDone }: Todo) {
-  const { mutate } = useUpdateTodoMutation();
-  const handleDeleteClick = () => {};
+  const { mutate: deleteTodo } = useDeleteTodoMutation();
+  const { mutate: updateTodo } = useUpdateTodoMutation();
+
+  const handleDeleteClick = () => {
+    deleteTodo(id);
+  };
   const handleCheckboxClick = () => {
-    mutate({ id, isDone: !isDone });
+    updateTodo({ id, isDone: !isDone });
   };
 
   return (
