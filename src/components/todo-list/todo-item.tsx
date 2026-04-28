@@ -5,12 +5,14 @@ import { useUpdateTodoMutation } from "@/hooks/mutations/use-update-todo-mutatio
 import { useDeleteTodoMutation } from "@/hooks/mutations/use-delete-todo-mutation";
 
 export default function TodoItem({ id, content, isDone }: Todo) {
-  const { mutate: deleteTodo } = useDeleteTodoMutation();
+  const { mutate: deleteTodo, isPending: isDeleteTodoPending } =
+    useDeleteTodoMutation();
   const { mutate: updateTodo } = useUpdateTodoMutation();
 
   const handleDeleteClick = () => {
     deleteTodo(id);
   };
+
   const handleCheckboxClick = () => {
     updateTodo({ id, isDone: !isDone });
   };
@@ -19,13 +21,18 @@ export default function TodoItem({ id, content, isDone }: Todo) {
     <div className="flex items-center justify-between border p-2">
       <div className="flex gap-5">
         <input
+          disabled={isDeleteTodoPending}
           onClick={handleCheckboxClick}
           type={"checkbox"}
           checked={isDone}
         />
         <Link to={`/todolist/${id}`}>{content}</Link>
       </div>
-      <Button variant={"destructive"} onClick={handleDeleteClick}>
+      <Button
+        disabled={isDeleteTodoPending}
+        variant={"destructive"}
+        onClick={handleDeleteClick}
+      >
         삭제
       </Button>
     </div>
