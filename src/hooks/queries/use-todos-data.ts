@@ -1,10 +1,19 @@
 import { fetchTodos } from "@/api/fetch-todos";
 import { QUERY_KEYS } from "@/lib/constant";
-import { useQuery } from "@tanstack/react-query";
+import type { Todo } from "@/type";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useTodosData() {
+  const queryClient = useQueryClient();
+
   return useQuery({
-    queryFn: fetchTodos,
+    queryFn: async () => {
+      const todos = await fetchTodos();
+      todos.forEach((todo) => {
+        queryClient.setQueryData<Todo>(QUERY_KEYS.todo.detail(todo.id), todo);
+      });
+      return todos.map((todo) => todo.id); // id만 모은 배열이 캐시데이터로 저장되게
+    },
     queryKey: QUERY_KEYS.todo.list,
   });
 }
