@@ -33,7 +33,7 @@ export const useIsSessionLoaded = () => {
   return isSessionLoaded;
 };
 
-export const useSessionActions = () => {
-  const setSession = useSessionStore((store) => store.actions);
+export const useSetSession = () => {
+  const setSession = useSessionStore((store) => store.actions.setSession);
   return setSession;
 };
