@@ -9,16 +9,11 @@ import { Toaster } from "./components/ui/sonner.tsx";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 0, // 주로 statleTime은 개발도중 0으로 함
-      gcTime: 5 * 60 * 1000, // 주로 5분
-
-      refetchOnMount: true,
+      retry: false,
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      refetchInterval: false,
     },
   },
-}); // queryClient는 일종의 store(api요청응답값, 캐싱)
+});
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
