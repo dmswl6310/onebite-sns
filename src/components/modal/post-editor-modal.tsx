@@ -2,24 +2,41 @@ import { ImageIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { usePostEditorModal } from "@/store/post-editor-modal";
+import { useEffect, useRef, useState } from "react";
 
 export default function PostEditorModal() {
   const { isOpen, close } = usePostEditorModal();
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [content, setContent] = useState("");
 
   const handleCloseModal = () => {
     close();
   };
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [content]);
+
   return (
     <Dialog open={isOpen} onOpenChange={handleCloseModal}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh]">
         <DialogTitle>포스트 작성</DialogTitle>
-        <textarea />
-        <Button>
+        <textarea
+          ref={textareaRef}
+          className="max-h-125 min-h-26 focus:outline-none"
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="무슨 일이 있었나요?"
+          value={content}
+        />
+        <Button variant={"outline"} className="cursor-pointer">
           <ImageIcon />
           이미지 추가
         </Button>
-        <Button>저장</Button>
+        <Button className="cursor-pointer">저장</Button>
       </DialogContent>
     </Dialog>
   );
