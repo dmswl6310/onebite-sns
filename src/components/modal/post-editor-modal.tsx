@@ -21,6 +21,12 @@ export default function PostEditorModal() {
     }
   }, [content]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    textareaRef.current?.focus();
+    setContent("");
+  }, [isOpen]);
+
   return (
     <Dialog open={isOpen} onOpenChange={handleCloseModal}>
       <DialogContent className="max-h-[90vh]">
